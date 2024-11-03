@@ -1,5 +1,7 @@
 # Update Operation
-
+**Import the Model:**
+```python
+from bookshelf.models import Book
 **Command:**
 ```python
 retrieved_book.title = "Nineteen Eighty-Four"

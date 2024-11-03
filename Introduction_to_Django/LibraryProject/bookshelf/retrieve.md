@@ -1,5 +1,7 @@
 # Retrieve Operation
-
+**Import the Model:**
+```python
+from bookshelf.models import Book
 **Command:**
 ```python
 retrieved_book = Book.objects.get(id=book.id)

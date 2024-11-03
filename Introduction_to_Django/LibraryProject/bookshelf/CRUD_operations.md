@@ -1,5 +1,7 @@
 # Create Operation
-
+**Import the Model:**
+```python
+from bookshelf.models import Book
 **Command:**
 ```python
 book = Book.objects.create(title="1984", author="George Orwell", publication_year=1949)
@@ -14,6 +16,9 @@ book = Book.objects.create(title="1984", author="George Orwell", publication_yea
 ---
 
 # Retrieve Operation
+**Import the Model:**
+```python
+from bookshelf.models import Book
 
 **Command:**
 ```python
@@ -30,7 +35,9 @@ retrieved_book
 ---
 
 # Update Operation
-
+**Import the Model:**
+```python
+from bookshelf.models import Book
 **Command:**
 ```python
 retrieved_book.title = "Nineteen Eighty-Four"
@@ -46,7 +53,9 @@ retrieved_book.save()
 ---
 
 # Delete Operation
-
+**Import the Model:**
+```python
+from bookshelf.models import Book
 **Command:**
 ```python
 retrieved_book.delete()

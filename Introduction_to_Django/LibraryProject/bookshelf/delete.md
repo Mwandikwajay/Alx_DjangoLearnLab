@@ -1,4 +1,7 @@
 # Delete Operation
+**Import the Model:**
+```python
+from bookshelf.models import Book
 
 **Command:**
 ```python
