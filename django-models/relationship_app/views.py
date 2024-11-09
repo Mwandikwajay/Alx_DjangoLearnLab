@@ -8,14 +8,8 @@ def list_books(request):
     # Query all books from the database
     books = Book.objects.all()
 
-    # Create a response with a simple text list of books and authors
-    response_content = "List of Books and Authors:\n\n"
-    
-    for book in books:
-        response_content += f"Book Title: {book.title}, Author: {book.author.name}\n"
-    
-    # Return the response as a plain text response
-    return HttpResponse(response_content, content_type='text/plain')
+    # Render the books using a template
+    return render(request, 'relationship_app/list_books.html', {'books': books})
 
 # New class-based view (CBV) for displaying library details and associated books
 class LibraryDetailView(DetailView):
