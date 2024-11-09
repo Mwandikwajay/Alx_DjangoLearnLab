@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.views.generic import DetailView
+from django.views.generic.detail import DetailView  # Correct import for DetailView
 from .models import Book  # Import Book model
 from .models import Library  # Import Library model separately
 
