@@ -1,9 +1,9 @@
 from django.urls import path
-from . import views
+from .views import list_books  # Explicitly import list_books
 
 urlpatterns = [
     # Existing URL patterns
-    path('list_books/', views.list_books, name='list_books'),
+    path('list_books/', list_books, name='list_books'),  # Correct import of list_books
     path('library/<int:pk>/', views.LibraryDetailView.as_view(), name='library_detail'),
     
     # Authentication views
@@ -14,14 +14,8 @@ urlpatterns = [
     path('librarian/', views.librarian_view, name='librarian_view'),
     path('member/', views.member_view, name='member_view'),
 
-    urlpatterns = [
-    # Existing URL patterns
-    path('list_books/', views.list_books, name='list_books'),
-    path('library/<int:pk>/', views.LibraryDetailView.as_view(), name='library_detail'),
-
     # Secured views for adding, editing, and deleting books
-    path('books/add/', views.add_book, name='add_book'),  # Secured add book view
-    path('books/edit/<int:book_id>/', views.edit_book, name='edit_book'),  # Secured edit book view
-    path('books/delete/<int:book_id>/', views.delete_book, name='delete_book'),  # Secured delete book view
-]
+    path('add/', views.add_book, name='add_book'),  # Secured add book view
+    path('edit/<int:book_id>/', views.edit_book, name='edit_book'),  # Secured edit book view
+    path('delete/<int:book_id>/', views.delete_book, name='delete_book'),  # Secured delete book view
 ]
