@@ -6,7 +6,8 @@ from django.http import HttpResponse
 from django.views.generic.detail import DetailView  # Correct import for DetailView
 from .models import Book  # Import Book model
 from .models import Library  # Import Library model separately
-
+from django.shortcuts import render
+from django.contrib.auth.decorators import user_passes_test
 # Existing function-based view (FBV) to list all books
 def list_books(request):
     # Query all books from the database
@@ -58,3 +59,30 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return render(request, 'relationship_app/logout.html')
+    
+# Helper function to check if the user is an Admin
+def is_admin(user):
+    return user.userprofile.role == 'Admin'
+
+# Helper function to check if the user is a Librarian
+def is_librarian(user):
+    return user.userprofile.role == 'Librarian'
+
+# Helper function to check if the user is a Member
+def is_member(user):
+    return user.userprofile.role == 'Member'
+
+# Admin view, only accessible to users with the 'Admin' role
+@user_passes_test(is_admin)
+def admin_view(request):
+    return render(request, 'admin_view.html')
+
+# Librarian view, only accessible to users with the 'Librarian' role
+@user_passes_test(is_librarian)
+def librarian_view(request):
+    return render(request, 'librarian_view.html')
+
+# Member view, only accessible to users with the 'Member' role
+@user_passes_test(is_member)
+def member_view(request):
+    return render(request, 'member_view.html')
