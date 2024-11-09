@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views  # Ensure views are imported correctly
+from . import views
 from django.contrib.auth.views import LoginView, LogoutView  # Import Django's built-in LoginView and LogoutView
 
 urlpatterns = [
