@@ -117,14 +117,10 @@ def edit_book(request, book_id):
         return redirect('list_books')  # Redirect to the list of books page
     return render(request, 'relationship_app/edit_book.html', {'book': book})
 
-@permission_required('relationship_app.can_change_book', raise_exception=True)
-def edit_book(request, book_id):
+@permission_required('relationship_app.can_delete_book', raise_exception=True)
+def delete_book(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
     if request.method == 'POST':
-        book.title = request.POST['title']
-        book.author = request.POST['author']
-        book.description = request.POST['description']
-        book.publication_date = request.POST['publication_date']
-        book.save()
+        book.delete()
         return redirect('list_books')  # Redirect to the list of books page
-    return render(request, 'relationship_app/edit_book.html', {'book': book})
+    return render(request, 'relationship_app/delete_book.html', {'book': book})
