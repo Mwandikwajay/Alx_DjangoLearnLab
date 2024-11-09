@@ -41,8 +41,8 @@ def retrieve_librarian_for_library(library_name):
         # Get the Library object by name
         library = Library.objects.get(name=library_name)
         
-        # Retrieve the librarian associated with the library
-        librarian = library.librarian  # OneToOne relationship
+        # Get the librarian associated with the library
+        librarian = Librarian.objects.get(library=library)  # Corrected line
         print(f"Librarian for {library.name}: {librarian.name}")
     except Library.DoesNotExist:
         print(f"No library found with the name: {library_name}")
