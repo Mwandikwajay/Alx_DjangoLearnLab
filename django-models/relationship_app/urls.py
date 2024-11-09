@@ -1,8 +1,4 @@
 from django.urls import path
-from . import views  # Import views here
-from django.contrib.auth.views import LoginView, LogoutView  # Import Django's built-in LoginView and LogoutView
-
-from django.urls import path
 from . import views  # Ensure views are imported correctly
 from django.contrib.auth.views import LoginView, LogoutView  # Import Django's built-in LoginView and LogoutView
 
