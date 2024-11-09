@@ -4,11 +4,11 @@ from django.contrib.auth.views import LoginView, LogoutView  # Import Django's b
 
 urlpatterns = [
     # Existing URL patterns
-    path('list_books/', views.list_books, name='list_books'),  # Use list_books view here
-    path('library/<int:pk>/', views.LibraryDetailView.as_view(), name='library_detail'),  # Class-based view for library details
+    path('list_books/', views.list_books, name='list_books'),
+    path('library/<int:pk>/', views.LibraryDetailView.as_view(), name='library_detail'),
     
-    # New authentication URL patterns using CBVs
-    path('login/', LoginView.as_view(template_name='relationship_app/login.html'), name='login'),  # Use LoginView CBV
-    path('logout/', LogoutView.as_view(), name='logout'),  # Use LogoutView CBV
-    path('register/', views.register, name='register'),  # Register view as function-based view (FBV)
+    # Authentication views using CBVs
+    path('login/', LoginView.as_view(template_name='relationship_app/login.html'), name='login'),
+    path('logout/', LogoutView.as_view(template_name='relationship_app/logout.html'), name='logout'),
+    path('register/', views.register, name='register'),
 ]
