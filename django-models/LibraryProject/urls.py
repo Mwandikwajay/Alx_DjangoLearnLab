@@ -1,7 +1,7 @@
 from django.contrib import admin
-from django.urls import path, include  # Include function is imported here
+from django.urls import path, include  # Ensure to include the 'include' function
 
 urlpatterns = [
-    path('admin/', admin.site.urls),  # This is the admin panel URL
-    path('books/', include('relationship_app.urls')),  # This includes the URLs from relationship_app
+    path('admin/', admin.site.urls),
+    path('', include('relationship_app.urls')),  # Ensure no extra 'books/' prefix here
 ]
