@@ -7,10 +7,10 @@ def list_books(request):
     return render(request, 'relationship_app/list_books.html', {'books': books})
 
 
-    
+  
 from django.shortcuts import render
 from django.views.generic import DetailView
-from relationship_app.models import Library
+from models import Library
 
 # Class-based view to display details of a specific library
 class LibraryDetailView(DetailView):
