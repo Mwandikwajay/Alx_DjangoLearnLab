@@ -14,4 +14,9 @@ urlpatterns = [
     path('admin/', views.admin_view, name='admin_view'),
     path('librarian/', views.librarian_view, name='librarian_view'),
     path('member/', views.member_view, name='member_view'),
+
+    # Secured views for adding, editing, and deleting books
+    path('books/add/', views.add_book, name='add_book'),  # Secured add book view
+    path('books/edit/<int:book_id>/', views.edit_book, name='edit_book'),  # Secured edit book view
+    path('books/delete/<int:book_id>/', views.delete_book, name='delete_book'),  # Secured delete book view
 ]

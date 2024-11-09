@@ -8,6 +8,8 @@ from .models import Book  # Import Book model
 from .models import Library  # Import Library model separately
 from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import permission_required
+
 # Existing function-based view (FBV) to list all books
 def list_books(request):
     # Query all books from the database
@@ -86,3 +88,43 @@ def librarian_view(request):
 @user_passes_test(is_member)
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
+
+@permission_required('relationship_app.can_add_book', raise_exception=True)
+def add_book(request):
+    if request.method == 'POST':
+        title = request.POST['title']
+        author = request.POST['author']
+        description = request.POST['description']
+        publication_date = request.POST['publication_date']
+        Book.objects.create(
+            title=title,
+            author=author,
+            description=description,
+            publication_date=publication_date
+        )
+        return redirect('list_books')  # Redirect to the list of books page
+    return render(request, 'relationship_app/add_book.html')
+
+@permission_required('relationship_app.can_change_book', raise_exception=True)
+def edit_book(request, book_id):
+    book = get_object_or_404(Book, pk=book_id)
+    if request.method == 'POST':
+        book.title = request.POST['title']
+        book.author = request.POST['author']
+        book.description = request.POST['description']
+        book.publication_date = request.POST['publication_date']
+        book.save()
+        return redirect('list_books')  # Redirect to the list of books page
+    return render(request, 'relationship_app/edit_book.html', {'book': book})
+
+@permission_required('relationship_app.can_change_book', raise_exception=True)
+def edit_book(request, book_id):
+    book = get_object_or_404(Book, pk=book_id)
+    if request.method == 'POST':
+        book.title = request.POST['title']
+        book.author = request.POST['author']
+        book.description = request.POST['description']
+        book.publication_date = request.POST['publication_date']
+        book.save()
+        return redirect('list_books')  # Redirect to the list of books page
+    return render(request, 'relationship_app/edit_book.html', {'book': book})
