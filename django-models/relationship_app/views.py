@@ -1,9 +1,11 @@
 from django.shortcuts import render
-from relationship_app.models import Book
+from .models import Book  # Import your Book model
 
-# Function-based view to list all books
+# Function-based view to display all books
 def list_books(request):
-    books = Book.objects.all()  # Fetch all books from the database
+    books = Book.objects.all()  # Get all books from the database
+    return render(request, 'relationship_app/list_books.html', {'books': books})
+
 
     
 from django.shortcuts import render
