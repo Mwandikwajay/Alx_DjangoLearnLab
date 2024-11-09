@@ -56,8 +56,8 @@ ROOT_URLCONF = 'LibraryProject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
+        'DIRS': [],  # You can add additional directories here if needed
+        'APP_DIRS': True,  # Make sure this is True
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
