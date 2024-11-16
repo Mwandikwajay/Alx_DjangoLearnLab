@@ -123,6 +123,18 @@ AUTH_USER_MODEL = 'bookshelf.CustomUser'
 
 # SECURITY SETTINGS (New)
 
+# Redirect all HTTP requests to HTTPS
+SECURE_SSL_REDIRECT = True
+
+# Enforce HTTPS for one year (31536000 seconds)
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+
+# Include all subdomains in the HSTS policy
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+# Allow preloading of the HSTS policy
+SECURE_HSTS_PRELOAD = True
+
 # Prevent browsers from performing cross-site scripting (XSS) attacks
 SECURE_BROWSER_XSS_FILTER = True
 
