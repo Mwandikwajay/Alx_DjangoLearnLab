@@ -1,0 +1,11 @@
+{% extends 'bookshelf/base_generic.html' %}
+
+{% block content %}
+  <h1>Create a New Book</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save Book</button>
+  </form>
+  <a href="{% url 'book_list' %}">Back to book list</a>
+{% endblock %}

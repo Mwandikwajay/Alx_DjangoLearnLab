@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}My Library{% endblock %}</title>
+</head>
+<body>
+  <header>
+    <h1>My Library</h1>
+    <nav>
+      <ul>
+        <li><a href="{% url 'book_list' %}">Books List</a></li>
+        <li><a href="{% url 'create_book' %}">Create a Book</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    {% block content %}
+    <!-- Content goes here -->
+    {% endblock %}
+  </main>
+
+  <footer>
+    <p>Library Project &copy; 2024</p>
+  </footer>
+</body>
+</html>
