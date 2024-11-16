@@ -1,0 +1,6 @@
+<form method="POST">
+    {% csrf_token %}
+    <label for="book_name">Book Name:</label>
+    <input type="text" id="book_name" name="book_name">
+    <button type="submit">Submit</button>
+</form>

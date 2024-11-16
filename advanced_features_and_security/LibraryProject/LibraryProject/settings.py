@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-((%h-vn9zrm__1(mm!q&enp+a_^5-t9ozghz2xpjsom+m&($mt'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -119,3 +119,19 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'  # This is where collectstatic will gathe
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
+
+
+# SECURITY SETTINGS (New)
+
+# Prevent browsers from performing cross-site scripting (XSS) attacks
+SECURE_BROWSER_XSS_FILTER = True
+
+# Prevent the application from being embedded in iframes to avoid clickjacking
+X_FRAME_OPTIONS = 'DENY'
+
+# Prevent the browser from interpreting files as something else (e.g., scripts)
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Enforce secure cookies for CSRF and session
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True

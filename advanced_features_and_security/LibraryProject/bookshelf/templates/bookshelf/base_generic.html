@@ -18,7 +18,14 @@
 
   <main>
     {% block content %}
-    <!-- Content goes here -->
+    <!-- If this template includes a form, ensure CSRF token is included inside the form -->
+    <form method="POST">
+      {% csrf_token %}
+      <!-- Your form fields go here -->
+      <label for="book_name">Book Name:</label>
+      <input type="text" id="book_name" name="book_name">
+      <button type="submit">Submit</button>
+    </form>
     {% endblock %}
   </main>
 
