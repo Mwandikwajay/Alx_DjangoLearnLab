@@ -147,3 +147,5 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 # Enforce secure cookies for CSRF and session
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
+# Add the necessary headers to support SSL when behind a reverse proxy
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
