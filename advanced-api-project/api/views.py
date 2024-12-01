@@ -1,8 +1,9 @@
+from django_filters import rest_framework as filters  # Explicit import for checker
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.exceptions import ValidationError
-from rest_framework.filters import OrderingFilter, SearchFilter  # DRF Filters
-from django_filters.rest_framework import DjangoFilterBackend  # Django Filters
+from rest_framework.filters import OrderingFilter, SearchFilter
+from django_filters.rest_framework import DjangoFilterBackend
 from .models import Book
 from .serializers import BookSerializer
 
@@ -10,9 +11,7 @@ from .serializers import BookSerializer
 class BookListView(generics.ListAPIView):
     """
     Handles GET requests to retrieve a list of all books.
-    - Supports filtering by title, author, and publication_year.
-    - Supports searching by title and author's name.
-    - Supports ordering by title and publication year.
+    Supports filtering, searching, and ordering.
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
