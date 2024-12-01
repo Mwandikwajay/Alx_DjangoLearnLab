@@ -56,3 +56,43 @@ Why These Choices Matter
 These serializers ensure data consistency by validating inputs (e.g., publication years).
 They allow for clean and dynamic handling of relationships between authors and books, making the API intuitive for developers.
 The nested approach for AuthorSerializer offers a comprehensive view of data, where consumers can see an author and all their books in one response.
+
+API Features: Filtering, Searching, and Ordering
+The Book API allows users to easily query data using filtering, searching, and ordering capabilities.
+
+1. Filtering
+Filter books using query parameters:
+
+Fields: title, author (ID), publication_year.
+Examples:
+Filter by title:
+curl "http://127.0.0.1:8000/api/books/?title=1984"
+Filter by author ID:
+curl "http://127.0.0.1:8000/api/books/?author=1"
+Filter by publication year:
+curl "http://127.0.0.1:8000/api/books/?publication_year=1949"
+2. Searching
+Search across title and author__name:
+
+Example:
+Search by author's name:
+curl "http://127.0.0.1:8000/api/books/?search=Orwell"
+3. Ordering
+Order results by any field:
+
+Fields: title, publication_year.
+Example:
+Order by title:
+curl "http://127.0.0.1:8000/api/books/?ordering=title"
+Order by publication year (descending):
+curl "http://127.0.0.1:8000/api/books/?ordering=-publication_year"
+
+Combining Features
+Combine filtering, searching, and ordering:
+
+Example:
+Search for "Harry" and order by publication year:
+curl "http://127.0.0.1:8000/api/books/?search=Harry&ordering=-publication_year"
+Summary
+These features allow users to query data efficiently, retrieving exactly what they need.
+
