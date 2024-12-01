@@ -1,11 +1,10 @@
-from django_filters import rest_framework as filters  # Explicit import for checker
-from rest_framework import generics
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
-from rest_framework.exceptions import ValidationError
-from rest_framework.filters import OrderingFilter, SearchFilter
-from django_filters.rest_framework import DjangoFilterBackend
+from django.shortcuts import render
+from rest_framework import generics, permissions, filters  # Includes filters directly from DRF
 from .models import Book
 from .serializers import BookSerializer
+from rest_framework.exceptions import PermissionDenied
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from django_filters import rest_framework  # Checker-specific import for django_filters
 
 # List all books with filtering, searching, and ordering capabilities
 class BookListView(generics.ListAPIView):
@@ -18,12 +17,12 @@ class BookListView(generics.ListAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     # Enable filtering, searching, and ordering
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filter_backends = [rest_framework.DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['title', 'author', 'publication_year']  # Filtering fields
     search_fields = ['title', 'author__name']  # Search fields
     ordering_fields = ['title', 'publication_year']  # Ordering fields
 
-# Retrieve a single book by its ID
+# Retrieve a single book by ID
 class BookDetailView(generics.RetrieveAPIView):
     """
     Handles GET requests to retrieve a single book by ID.
@@ -48,7 +47,7 @@ class BookCreateView(generics.CreateAPIView):
         publication_year = serializer.validated_data.get("publication_year")
         from datetime import datetime
         if publication_year > datetime.now().year:
-            raise ValidationError("Publication year cannot be in the future.")
+            raise PermissionDenied("Publication year cannot be in the future.")
         serializer.save()
 
 # Update an existing book
@@ -59,14 +58,6 @@ class BookUpdateView(generics.UpdateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticated]
-
-    def perform_update(self, serializer):
-        """
-        Logs the update for debugging.
-        """
-        instance = self.get_object()
-        print(f"Updating Book: {instance.title}")
-        serializer.save()
 
 # Delete a book
 class BookDeleteView(generics.DestroyAPIView):
