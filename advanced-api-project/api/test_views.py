@@ -8,9 +8,11 @@ class BookAPITestCase(TestCase):
     def setUp(self):
         self.client = APIClient()
 
-        # Create test user and log in
+        # Create test user
         self.user = User.objects.create_user(username="testuser", password="password123")
-        self.client.force_authenticate(user=self.user)  # Authenticate with the test user
+
+        # Log in the test user
+        self.client.login(username="testuser", password="password123")
 
         # Create a test author
         self.author = Author.objects.create(name="Test Author")
@@ -64,6 +66,7 @@ class BookAPITestCase(TestCase):
         response = self.client.delete(self.delete_url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Book.objects.count(), 0)  # Book deleted
+
     def test_filter_books_by_title(self):
         """Test filtering books by title."""
         response = self.client.get(f"{self.list_url}?title=Test Book")
