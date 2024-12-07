@@ -33,4 +33,10 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('register/', views.register, name='register'),
     path('profile/', views.profile, name='profile'),
+
+    #Search
+    path('search/', views.search_posts, name='search-posts'),
+
+    #Tags
+    path('tags/<str:tag>/', views.tagged_posts, name='tagged-posts'),
 ]

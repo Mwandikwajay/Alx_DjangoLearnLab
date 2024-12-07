@@ -1,3 +1,4 @@
+from django.db.models import Q  # Import Q for complex queries
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
@@ -8,6 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from .forms import UserRegisterForm, CommentForm
 from .models import Post, Comment
+from taggit.models import Tag
 
 # Home View
 def home(request):
@@ -64,7 +66,7 @@ class PostDetailView(DetailView):
 # CreateView: Allow users to create posts
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'content']
+    fields = ['title', 'content', 'tags']
     template_name = 'blog/post_form.html'
 
     def form_valid(self, form):
@@ -74,7 +76,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 # UpdateView: Allow authors to update posts
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
-    fields = ['title', 'content']
+    fields = ['title', 'content', 'tags']
     template_name = 'blog/post_form.html'
 
     def form_valid(self, form):
@@ -142,3 +144,21 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('post-detail', kwargs={'pk': self.object.post.pk})
+
+# ---- Search Functionality ---- #
+def search_posts(request):
+    query = request.GET.get('q')  # Get the search query from the request
+    posts = Post.objects.all()  # Base queryset
+
+    if query:
+        posts = posts.filter(
+            Q(title__icontains=query) | 
+            Q(content__icontains=query) | 
+            Q(tags__name__icontains=query)
+        ).distinct()  # Ensures no duplicates
+
+    return render(request, 'blog/search_results.html', {'posts': posts, 'query': query})
+
+def tagged_posts(request, tag):
+    posts = Post.objects.filter(tags__name__icontains=tag).distinct()
+    return render(request, 'blog/search_results.html', {'posts': posts, 'query': tag})        
