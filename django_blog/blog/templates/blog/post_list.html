@@ -1,15 +1,16 @@
-{% extends 'blog/base.html' %}
-{% block content %}
+{% if tag %}
+    <h2>Posts tagged with "{{ tag }}"</h2>
+{% else %}
     <h2>All Blog Posts</h2>
-    <a href="{% url 'post-create' %}">Create New Post</a>
-    <ul>
-        {% for post in posts %}
-            <li>
-                <a href="{% url 'post-detail' post.pk %}">{{ post.title }}</a> 
-                - {{ post.published_date|date:"F d, Y" }}
-            </li>
-        {% empty %}
-            <p>No posts available.</p>
-        {% endfor %}
-    </ul>
-{% endblock %}
+{% endif %}
+
+<ul>
+    {% for post in posts %}
+        <li>
+            <a href="{% url 'post-detail' post.pk %}">{{ post.title }}</a> 
+            - {{ post.published_date|date:"F d, Y" }}
+        </li>
+    {% empty %}
+        <p>No posts available.</p>
+    {% endfor %}
+</ul>

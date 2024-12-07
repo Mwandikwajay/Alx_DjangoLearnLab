@@ -9,7 +9,8 @@ from .views import (
     PostDeleteView,
     CommentCreateView,
     CommentUpdateView,
-    CommentDeleteView
+    CommentDeleteView,
+    PostByTagListView,  # Import the new class-based view for tags
 )
 
 urlpatterns = [
@@ -24,9 +25,9 @@ urlpatterns = [
     path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post-delete'),
     
     # Comments
-    path('post/<int:pk>/comments/new/', CommentCreateView.as_view(), name='add-comment'),  # Add comment
-    path('comment/<int:pk>/update/', CommentUpdateView.as_view(), name='edit-comment'),    # Update comment
-    path('comment/<int:pk>/delete/', CommentDeleteView.as_view(), name='delete-comment'),  # Delete comment
+    path('post/<int:pk>/comments/new/', CommentCreateView.as_view(), name='add-comment'),
+    path('comment/<int:pk>/update/', CommentUpdateView.as_view(), name='edit-comment'),
+    path('comment/<int:pk>/delete/', CommentDeleteView.as_view(), name='delete-comment'),
     
     # Authentication
     path('login/', auth_views.LoginView.as_view(template_name='blog/login.html'), name='login'),
@@ -34,9 +35,9 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('profile/', views.profile, name='profile'),
 
-    #Search
+    # Search
     path('search/', views.search_posts, name='search-posts'),
 
-    #Tags
-    path('tags/<str:tag>/', views.tagged_posts, name='tagged-posts'),
+    # Tags
+    path('tags/<slug:tag_slug>/', PostByTagListView.as_view(), name='tagged-posts'),  # Fix for tags
 ]
