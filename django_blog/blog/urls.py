@@ -15,10 +15,10 @@ urlpatterns = [
 
     # Blog Post Management
     path('posts/', PostListView.as_view(), name='post-list'),  # List all posts
-    path('posts/<int:pk>/', PostDetailView.as_view(), name='post-detail'),  # View single post
-    path('posts/new/', PostCreateView.as_view(), name='post-create'),  # Create a post
-    path('posts/<int:pk>/edit/', PostUpdateView.as_view(), name='post-update'),  # Edit a post
-    path('posts/<int:pk>/delete/', PostDeleteView.as_view(), name='post-delete'),  # Delete a post
+    path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),  # View single post
+    path('post/new/', PostCreateView.as_view(), name='post-create'),  # Create a post
+    path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post-update'),  # Edit a post
+    path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post-delete'),  # Delete a post
 
     # Authentication
     path('login/', auth_views.LoginView.as_view(template_name='blog/login.html'), name='login'),
