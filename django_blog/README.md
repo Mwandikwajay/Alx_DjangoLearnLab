@@ -41,3 +41,30 @@ URLs
 /logout/: Logout Page
 /register/: Registration Page
 /profile/: Profile Management Page
+
+Comment System
+The comment system allows users to interact with blog posts by adding, editing, and deleting comments.
+
+Features:
+Add a Comment:
+
+Authenticated users can leave comments on a blog post.
+Comment form is available at the bottom of the post detail page.
+Edit a Comment:
+
+Comment authors can edit their own comments.
+Delete a Comment:
+
+Comment authors can delete their own comments.
+Permissions:
+
+Only logged-in users can add comments.
+Only the author of a comment can edit or delete it.
+Endpoints:
+Add Comment: /post/<post_id>/comments/new/
+Edit Comment: /comments/<comment_id>/edit/
+Delete Comment: /comments/<comment_id>/delete/
+How It Works:
+Go to a post detail page (e.g., /post/1/).
+Add a comment using the provided form.
+Edit or delete your comment by clicking the respective buttons next to it.

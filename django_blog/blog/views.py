@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -7,7 +7,8 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from .forms import UserRegisterForm
-from .models import Post  # Import the Post model
+from .models import Post, Comment  # Import the Post model
+from .forms import CommentForm
 
 # Home View
 def home(request):
@@ -95,3 +96,51 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         post = self.get_object()
         return self.request.user == post.author  # Only the author can delete the post
+
+@login_required
+def add_comment(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            comment.save()
+            messages.success(request, "Your comment has been added.")
+            return redirect('post-detail', pk=post_id)
+    else:
+        form = CommentForm()
+    return render(request, 'blog/add_comment.html', {'form': form, 'post': post})
+
+# Edit a Comment
+@login_required
+def edit_comment(request, comment_id):
+    comment = get_object_or_404(Comment, pk=comment_id)
+    if request.user != comment.author:
+        messages.error(request, "You are not allowed to edit this comment.")
+        return redirect('post-detail', pk=comment.post.pk)
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your comment has been updated.")
+            return redirect('post-detail', pk=comment.post.pk)
+    else:
+        form = CommentForm(instance=comment)
+    return render(request, 'blog/edit_comment.html', {'form': form, 'comment': comment})
+
+# Delete a Comment
+@login_required
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, pk=comment_id)
+    if request.user != comment.author:
+        messages.error(request, "You are not allowed to delete this comment.")
+        return redirect('post-detail', pk=comment.post.pk)
+
+    if request.method == 'POST':
+        comment.delete()
+        messages.success(request, "Your comment has been deleted.")
+        return redirect('post-detail', pk=comment.post.pk)
+    return render(request, 'blog/delete_comment.html', {'comment': comment})
