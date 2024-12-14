@@ -14,15 +14,15 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        # Create user using the built-in create_user method
+        # Explicitly use create_user
         user = User.objects.create_user(
             username=validated_data['username'],
             password=validated_data['password'],
             bio=validated_data.get('bio', "")
         )
 
-        # Generate a token for the user
-        token, _ = Token.objects.get_or_create(user=user)
+        # Explicitly use Token.objects.create
+        token = Token.objects.create(user=user)
 
         # Attach the token to the serializer response
         user.token = token.key
