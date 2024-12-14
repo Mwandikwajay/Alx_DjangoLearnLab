@@ -1,12 +1,13 @@
 from rest_framework import serializers
-from rest_framework.authtoken.models import Token  # For token creation
-from django.contrib.auth import get_user_model  # To fetch the custom user model
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import get_user_model  # Import the get_user_model function
 
+# Get the custom user model
 User = get_user_model()
 
 # User Registration Serializer
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    token = serializers.CharField(read_only=True)  # To return the token in response
+    token = serializers.CharField(read_only=True)  # To include the token in the response
 
     class Meta:
         model = User
@@ -14,17 +15,17 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        # Explicitly use create_user
-        user = User.objects.create_user(
+        # Use get_user_model().objects.create_user explicitly
+        user = get_user_model().objects.create_user(
             username=validated_data['username'],
             password=validated_data['password'],
             bio=validated_data.get('bio', "")
         )
 
-        # Explicitly use Token.objects.create
-        token = Token.objects.create(user=user)
+        # Generate a token for the user
+        token, _ = Token.objects.get_or_create(user=user)
 
-        # Attach the token to the serializer response
+        # Add the token to the user object for response purposes
         user.token = token.key
         return user
 
