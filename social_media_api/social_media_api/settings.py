@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',  # Django REST Framework
     'rest_framework.authtoken',  # Token Authentication
     'accounts',  # Custom User app
+    'posts',  # New app
 ]
 
 MIDDLEWARE = [
@@ -126,3 +127,15 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',  # Token authentication
+        'rest_framework.authentication.SessionAuthentication',  # Optional for login
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',  # Default permission
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,  # Number of results per page
+}
