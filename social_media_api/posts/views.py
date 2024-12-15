@@ -1,11 +1,12 @@
-# Import the necessary modules
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import viewsets, permissions, filters, status
 from django.shortcuts import get_object_or_404
 from .models import Post, Comment, Like
 from .serializers import PostSerializer, CommentSerializer
-from notifications.utils import create_notification  # Import the utility for notifications
+from notifications.models import Notification  # Ensure you have this import
+from notifications.utils import create_notification  # Utility function for notifications
+
 
 # Custom Permission: Only allow owners to edit or delete
 class IsOwnerOrReadOnly(permissions.BasePermission):
@@ -24,8 +25,7 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """
-        Override queryset to display posts from followed users if authenticated,
-        otherwise display all posts.
+        Display posts from followed users or all posts.
         """
         if self.request.user.is_authenticated:
             following_users = self.request.user.following.all()
@@ -38,7 +38,6 @@ class PostViewSet(viewsets.ModelViewSet):
         """
         serializer.save(author=self.request.user)
 
-    # My posts endpoint
     @action(detail=False, methods=['get'], permission_classes=[permissions.IsAuthenticated])
     def my_posts(self, request):
         """
@@ -48,44 +47,41 @@ class PostViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-    # Feed endpoint
     @action(detail=False, methods=['get'], permission_classes=[permissions.IsAuthenticated])
     def feed(self, request):
         """
-        Custom action to retrieve posts from followed users.
+        Retrieve posts from followed users.
         """
         following_users = request.user.following.all()
         queryset = Post.objects.filter(author__in=following_users).order_by('-created_at')
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-    # Like a post
     @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
     def like(self, request, pk=None):
         """
-        Action to like a post and create a notification.
+        Like a post and create a notification for the post author.
         """
         post = get_object_or_404(Post, pk=pk)
-        if Like.objects.filter(user=request.user, post=post).exists():
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
+        
+        if not created:  # User already liked the post
             return Response({'detail': 'You have already liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
-        Like.objects.create(user=request.user, post=post)
 
-        # Create a notification for the post's author
+        # Create a notification for the post author
         if post.author != request.user:
-            create_notification(
+            Notification.objects.create(
                 recipient=post.author,
                 actor=request.user,
-                verb='liked your post',
+                verb="liked your post",
                 target=post
             )
-
         return Response({'detail': 'Post liked successfully.'}, status=status.HTTP_201_CREATED)
 
-    # Unlike a post
     @action(detail=True, methods=['delete'], permission_classes=[permissions.IsAuthenticated])
     def unlike(self, request, pk=None):
         """
-        Action to unlike a post.
+        Unlike a post.
         """
         post = get_object_or_404(Post, pk=pk)
         like = Like.objects.filter(user=request.user, post=post)
@@ -110,9 +106,9 @@ class CommentViewSet(viewsets.ModelViewSet):
         """
         comment = serializer.save(author=self.request.user)
 
-        # Trigger a notification for the post author
-        if comment.post.author != self.request.user:  # Avoid notifying self
-            create_notification(
+        # Create a notification for the post author
+        if comment.post.author != self.request.user:
+            Notification.objects.create(
                 recipient=comment.post.author,
                 actor=self.request.user,
                 verb="commented on your post",
