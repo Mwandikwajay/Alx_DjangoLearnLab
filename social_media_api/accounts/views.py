@@ -1,9 +1,7 @@
-from rest_framework.generics import CreateAPIView, UpdateAPIView, ListAPIView
+from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from rest_framework import status
-from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
+from django.contrib.auth import authenticate
 from django.shortcuts import get_object_or_404
 
 from .models import CustomUser
@@ -14,22 +12,24 @@ from .serializers import (
 )
 
 # User Registration View
-class RegisterUserView(CreateAPIView):
+class RegisterUserView(generics.GenericAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserRegistrationSerializer
 
-    def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        user = self.serializer_class.Meta.model.objects.get(username=response.data['username'])
-        return Response({'token': user.token, 'username': user.username}, status=status.HTTP_201_CREATED)
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            return Response({'token': user.token, 'username': user.username}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # User Login View
-class LoginUserView(CreateAPIView):
+class LoginUserView(generics.GenericAPIView):
     serializer_class = UserLoginSerializer
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data)
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             username = serializer.validated_data['username']
             password = serializer.validated_data['password']
@@ -41,13 +41,13 @@ class LoginUserView(CreateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# Follow a User
-class FollowUserView(UpdateAPIView):
+# Follow User View
+class FollowUserView(generics.GenericAPIView):
     queryset = CustomUser.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
-    def update(self, request, *args, **kwargs):
-        user_to_follow = self.get_object()
+    def post(self, request, pk, *args, **kwargs):
+        user_to_follow = get_object_or_404(CustomUser, pk=pk)
         if user_to_follow == request.user:
             return Response({"detail": "You cannot follow yourself."}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -55,13 +55,13 @@ class FollowUserView(UpdateAPIView):
         return Response({"detail": f"You are now following {user_to_follow.username}."}, status=status.HTTP_200_OK)
 
 
-# Unfollow a User
-class UnfollowUserView(UpdateAPIView):
+# Unfollow User View
+class UnfollowUserView(generics.GenericAPIView):
     queryset = CustomUser.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
-    def update(self, request, *args, **kwargs):
-        user_to_unfollow = self.get_object()
+    def post(self, request, pk, *args, **kwargs):
+        user_to_unfollow = get_object_or_404(CustomUser, pk=pk)
         if user_to_unfollow == request.user:
             return Response({"detail": "You cannot unfollow yourself."}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -70,18 +70,22 @@ class UnfollowUserView(UpdateAPIView):
 
 
 # List Users Being Followed
-class ListFollowingView(ListAPIView):
+class ListFollowingView(generics.GenericAPIView):
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
-    def get_queryset(self):
-        return self.request.user.following.all()
+    def get(self, request, *args, **kwargs):
+        following_users = request.user.following.all()
+        serializer = self.get_serializer(following_users, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 # List Followers
-class ListFollowersView(ListAPIView):
+class ListFollowersView(generics.GenericAPIView):
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
-    def get_queryset(self):
-        return self.request.user.followers.all()
+    def get(self, request, *args, **kwargs):
+        followers = request.user.followers.all()
+        serializer = self.get_serializer(followers, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

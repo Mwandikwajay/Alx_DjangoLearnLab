@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (
-    RegisterUserView, LoginUserView, FollowUserView, 
+    RegisterUserView, LoginUserView, FollowUserView,
     UnfollowUserView, ListFollowingView, ListFollowersView
 )
 
