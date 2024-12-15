@@ -81,16 +81,14 @@ WSGI_APPLICATION = 'social_media_api.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Socialmedia',
-        'USER': 'Judith',
-        'PASSWORD': 'jayjay32#',
-        'HOST': 'JudithMusangi.postgres.pythonanywhere-services.com',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'JudithMusangi$default',  # Your database name
+        'USER': 'JudithMusangi',         # Your username
+        'PASSWORD': 'pz!y$wiyGJk82RL',  # Replace with your MySQL password
+        'HOST': 'JudithMusangi.mysql.pythonanywhere-services.com',  # Host address
+        'PORT': '3306',
     }
 }
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
