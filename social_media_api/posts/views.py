@@ -1,10 +1,10 @@
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import viewsets, permissions, filters, status
-from rest_framework.generics import get_object_or_404
+from rest_framework import generics  # Import generics for get_object_or_404
 from .models import Post, Comment, Like
 from .serializers import PostSerializer, CommentSerializer
-from notifications.models import Notification  # Ensure you have this import
+from notifications.models import Notification  # Ensure this import
 from notifications.utils import create_notification  # Utility function for notifications
 
 
@@ -62,7 +62,7 @@ class PostViewSet(viewsets.ModelViewSet):
         """
         Like a post and create a notification for the post author.
         """
-        post = get_object_or_404(Post, pk=pk)
+        post = generics.get_object_or_404(Post, pk=pk)  # Explicitly use generics.get_object_or_404
         like, created = Like.objects.get_or_create(user=request.user, post=post)
         
         if not created:  # User already liked the post
@@ -83,7 +83,7 @@ class PostViewSet(viewsets.ModelViewSet):
         """
         Unlike a post.
         """
-        post = get_object_or_404(Post, pk=pk)
+        post = generics.get_object_or_404(Post, pk=pk)  # Explicitly use generics.get_object_or_404
         like = Like.objects.filter(user=request.user, post=post)
         if not like.exists():
             return Response({'detail': 'You have not liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
