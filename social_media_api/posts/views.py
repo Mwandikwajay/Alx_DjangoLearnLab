@@ -7,7 +7,6 @@ from .serializers import PostSerializer, CommentSerializer
 from notifications.models import Notification  # Ensure this import
 from notifications.utils import create_notification  # Utility function for notifications
 
-
 # Custom Permission: Only allow owners to edit or delete
 class IsOwnerOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
