@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',  # Token Authentication
     'accounts',  # Custom User app
     'posts',  # New app
+    'notifications',
 ]
 
 MIDDLEWARE = [

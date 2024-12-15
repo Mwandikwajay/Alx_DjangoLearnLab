@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),  # Include accounts app routes
     path('api/', include('posts.urls')),  # Include posts routes
+    path('api/notifications/', include('notifications.urls')),
 ]
