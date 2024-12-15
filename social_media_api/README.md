@@ -121,3 +121,19 @@ Response:
   "created_at": "2024-12-14T10:30:45.891166Z",
   "updated_at": "2024-12-14T10:30:45.891202Z"
 }
+
+Endpoint	Method	Description	Request Body	Response Example
+/api/posts/	GET	List all posts	None	[{"id": 1, "title": "Post 1", "content": "Content here", "author": "user"}]
+/api/posts/	POST	Create a new post	{"title": "My Post", "content": "Text"}	{"id": 1, "title": "My Post", "content": "Text", "author": "user"}
+/api/posts/<id>/	GET	Retrieve a specific post	None	{"id": 1, "title": "Post 1", "content": "Content here", "author": "user"}
+/api/posts/<id>/	PUT	Update a specific post (Author Only)	{"title": "Updated Post", "content": "Updated Text"}	{"id": 1, "title": "Updated Post", "content": "Updated Text"}
+/api/posts/<id>/	DELETE	Delete a specific post (Author Only)	None	204 No Content
+/api/comments/	POST	Add a comment to a post	{"post": 1, "content": "Nice post!"}	{"id": 1, "post": 1, "content": "Nice post!", "author": "user"}
+/api/comments/<id>/	PUT	Update a comment (Author Only)	{"content": "Updated Comment"}	{"id": 1, "post": 1, "content": "Updated Comment"}
+/api/comments/<id>/	DELETE	Delete a comment (Author Only)	None	204 No Content
+
+Endpoint	Method	Description	Request Body	Response Example
+/accounts/follow/<user_id>/	POST	Follow a user	None	{"message": "You are now following user2."}
+/accounts/unfollow/<user_id>/	POST	Unfollow a user	None	{"message": "You have unfollowed user2."}
+/accounts/following/	GET	List users you are following	None	[{"id": 2, "username": "user2"}]
+/api/feed/	GET	Retrieve posts from followed users	None	[{"id": 1, "title": "Followed Post", "author": "user2", "content": "Content"}]
