@@ -18,7 +18,7 @@ import dj_database_url  # Optional for enhanced DB management
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
+DEBUG = False  # Explicitly set DEBUG to False for production
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'fallback_secret_key')
